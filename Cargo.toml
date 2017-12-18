@@ -1,0 +1,10 @@
+[package]
+name = "test1"
+version = "0.1.0"
+authors = ["Naoki Satou <yomicerisier@gmail.com>"]
+
+[dependencies]
+egg-mode = "0.12.0"
+mnist = "0.4.0"
+nalgebra = "*"
+gnuplot = "*"
