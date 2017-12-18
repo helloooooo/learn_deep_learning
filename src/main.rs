@@ -3,10 +3,12 @@ extern crate nalgebra;
 extern crate gnuplot;
 mod lossfunc;
 mod gradient;
+mod nural;
+
 
 use mnist::{Mnist, MnistBuilder};
-use nalgebra::core::{DMatrix};
-use gnuplot::{Figure,Caption,Color, AxesCommon,Fix};
+use nalgebra::core::DMatrix;
+use gnuplot::{Figure, Caption, Color, AxesCommon, Fix};
 
 
 
@@ -21,6 +23,6 @@ fn main() {
         .validation_set_length(10_000)
         .test_set_length(10_000)
         .finalize();
-    let x1 = DMatrix::<f64>::from_iterator(1, trn_img.len(),trn_img.iter().map(|i| *i as f64));
-    println!("{}",x1);
+    let x1 = DMatrix::<f64>::from_iterator(1, trn_img.len(), trn_img.iter().map(|i| *i as f64));
+    println!("{}", x1);
 }
