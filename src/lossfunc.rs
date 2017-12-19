@@ -18,20 +18,29 @@ pub fn mean_squared_error(y: DMatrix<f64>, t: DMatrix<f64>) -> f64 {
 #[test]
 fn p91() {
     let t = DMatrix::<f64>::from_iterator(
-        10,
         1,
+        10,
         [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
             .iter()
             .cloned(),
     );
-    let y = DMatrix::<f64>::from_iterator(
-        10,
+    let t1 = DMatrix::<f64>::from_iterator(
         1,
+        3,
+        [0.3654127111314497, 0.23927077686987236, 0.395316511998678]
+            .iter()
+            .cloned(),
+    );
+    let y1 = DMatrix::<f64>::from_iterator(1, 3, [0.0, 0.0, 1.0].iter().cloned());
+    let y = DMatrix::<f64>::from_iterator(
+        1,
+        10,
         [0.1, 0.05, 0.6, 0.0, 0.05, 0.1, 0.0, 0.1, 0.0, 0.0]
             .iter()
             .cloned(),
     );
     assert_eq!(0.51082545709933802, cross_entropy(y, t));
+    assert_eq!(0.92806828578640754, cross_entropy(t1, y1));
 }
 #[test]
 fn p89() {
