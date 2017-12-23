@@ -1,22 +1,34 @@
+
 extern crate nalgebra;
 use nalgebra::core::DMatrix;
+use std::rc::Rc;
+use std::cell::{RefCell, Ref, RefMut};
+use two_layer_net;
 
-
-pub fn numerical_gradient<F>(f: F, x: &mut DMatrix<f64>) -> DMatrix<f64>
-where
-    F: Fn(&mut DMatrix<f64>) -> f64,
-{
+pub fn numerical_gradient<
+    F: Fn(&DMatrix<f64>,
+       &DMatrix<f64>,
+       &two_layer_net::Two_layer_network)
+       -> f64,
+>(
+    f: F,
+    two: &two_layer_net::Two_layer_network,
+    x: &Rc<RefCell<DMatrix<f64>>>,
+    t: &DMatrix<f64>,
+) -> DMatrix<f64> {
     let h = 1.0e-4;
-    let mut grad = DMatrix::<f64>::from_element(x.nrows(), x.ncols(), 0.0);
-    for i in 0..x.len() {
-        let tmp_val = x[i];
-        x[i] = tmp_val + h;
-        let fxh1 = f(x);
-        x[i] = tmp_val - h;
-        let fxh2 = f(x);
+    let mut grad = DMatrix::<f64>::from_element(x.borrow().nrows(), x.borrow().ncols(), 0.0);
+
+    for i in 0..x.borrow().len() {
+        let mut cp_x = x.borrow_mut();
+        let tmp_val = cp_x[i];
+        cp_x[i] = tmp_val + h;
+        let fxh1 = f(&cp_x, t, two);
+        cp_x[i] = tmp_val - h;
+        let fxh2 = f(&cp_x, t, two);
 
         grad[i] = (fxh1 - fxh2) / (2.0 * h);
-        x[i] = tmp_val;
+        cp_x[i] = tmp_val;
     }
     grad
 }
@@ -35,11 +47,4 @@ fn p102() {
             .cloned(),
     );
     assert_eq!(385.0, function_2(t));
-}
-#[test]
-fn p104() {
-    let t = &mut DMatrix::<f64>::from_iterator(2, 1, [3.0, 4.0].iter().cloned());
-    let ans =
-        DMatrix::<f64>::from_iterator(2, 1, [6.00000000000378, 7.999999999999119].iter().cloned());
-    assert_eq!(ans, numerical_gradient(function_2, t));
 }

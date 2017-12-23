@@ -1,7 +1,7 @@
 extern crate nalgebra;
 use nalgebra::core::DMatrix;
 
-pub fn cross_entropy(y: DMatrix<f64>, t: DMatrix<f64>) -> f64 {
+pub fn cross_entropy(y: &DMatrix<f64>, t: &DMatrix<f64>) -> f64 {
     let delta = 1.0e-7;
     -1.0 *
         y.iter().zip(t.iter()).fold(0.0, |amount, (_y, _t)| {
@@ -24,14 +24,14 @@ fn p91() {
             .iter()
             .cloned(),
     );
-    let t1 = DMatrix::<f64>::from_iterator(
+    let y1 = DMatrix::<f64>::from_iterator(
         1,
         3,
         [0.3654127111314497, 0.23927077686987236, 0.395316511998678]
             .iter()
             .cloned(),
     );
-    let y1 = DMatrix::<f64>::from_iterator(1, 3, [0.0, 0.0, 1.0].iter().cloned());
+    let t1 = DMatrix::<f64>::from_iterator(1, 3, [0.0, 0.0, 1.0].iter().cloned());
     let y = DMatrix::<f64>::from_iterator(
         1,
         10,
@@ -39,8 +39,8 @@ fn p91() {
             .iter()
             .cloned(),
     );
-    assert_eq!(0.51082545709933802, cross_entropy(y, t));
-    assert_eq!(0.92806828578640754, cross_entropy(t1, y1));
+    assert_eq!(0.51082545709933802, cross_entropy(&y, &t));
+    assert_eq!(0.92806828578640754, cross_entropy(&y1, &t1));
 }
 #[test]
 fn p89() {

@@ -4,8 +4,7 @@ extern crate gnuplot;
 mod lossfunc;
 mod gradient;
 mod nural;
-
-
+mod two_layer_net;
 use mnist::{Mnist, MnistBuilder};
 use nalgebra::core::DMatrix;
 use gnuplot::{Figure, Caption, Color, AxesCommon, Fix};
