@@ -20,7 +20,7 @@ impl Neural {
     }
 }
 pub fn dot(x: &DMatrix<f64>, w: &DMatrix<f64>, b: &DMatrix<f64>) -> DMatrix<f64> {
-    x * w + b
+    (x * w) + b
 }
 
 pub fn sigmoid(x: &DMatrix<f64>) -> DMatrix<f64> {
