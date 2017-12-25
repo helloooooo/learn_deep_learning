@@ -14,17 +14,42 @@ impl Neural {
     pub fn loss(self, x: &DMatrix<f64>, t: &DMatrix<f64>) -> f64 {
         let z = self.predict(&x);
         let y = softmax(&z);
-        println!("{:?}", y.clone());
         let loss = lossfunc::cross_entropy(&y, &t);
         loss
     }
 }
-pub fn dot(x: &DMatrix<f64>, w: &DMatrix<f64>, b: &DMatrix<f64>) -> DMatrix<f64> {
-    (x * w) + b
+pub fn dot(x: &DMatrix<f64>, w: &DMatrix<f64>) -> DMatrix<f64> {
+    (x * w)
 }
 
 pub fn sigmoid(x: &DMatrix<f64>) -> DMatrix<f64> {
     x.map(|i| 1.0 / (1.0 + (-i).exp()))
+}
+pub fn sigmoid_grad(x: &DMatrix<f64>) -> DMatrix<f64> {
+    sigmoid(x).map(|i| 1.0 - i) * sigmoid(x)
+}
+
+pub fn axisZerosum(x: &DMatrix<f64>) -> DMatrix<f64> {
+    let zerosum = DMatrix::<f64>::from_iterator(
+        1,
+        x.shape().1,
+        createVec(x.shape().1)
+            .iter()
+            .map(|i| x.row(*i).clone_owned().iter().sum())
+            .collect::<Vec<f64>>(),
+    );
+
+    let one = DMatrix::<f64>::from_element(x.shape().0, 1, 1.0);
+    (one * zerosum)
+
+}
+
+pub fn createVec(x: usize) -> Vec<usize> {
+    let mut vec = Vec::with_capacity(x);
+    for i in 0..x {
+        vec.push(i);
+    }
+    vec
 }
 
 pub fn softmax(a: &DMatrix<f64>) -> DMatrix<f64> {
